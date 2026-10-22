@@ -31,6 +31,7 @@ import { Value } from "typebox/value";
 import type { TSchema } from "typebox";
 import { quizDisplayInputSchema, askInputSchema, askOptionProblems, quizInputProblems, explainInputProblems, explainDisplayInputSchema, type AskToolInput, type QuizToolInput, type ExplainToolInput } from "./question-core.ts";
 import { healEncodedArguments } from "./argument-heal.ts";
+import { codeExerciseDisplayInputSchema, codeExerciseInputProblems, type CodeExerciseDisplayInput } from "./code-exercise.ts";
 import { probeDoneInputSchema, type ProbeDoneInput } from "./contracts/probe.ts";
 
 /** The pi-boundary parse step, mirrored here (live-smoke fix, 2026-09-26):
@@ -111,6 +112,23 @@ export function parseExplainInput(input: unknown): ExplainToolInput | undefined 
 	if (!cleaned) return undefined;
 	if (explainInputProblems(cleaned).length > 0) return undefined;
 	return cleaned;
+}
+
+/** Code-exercise parse for DISPLAY: the display schema (the tool's fields
+ *  minus nodeId, which Value.Clean strips) after the boundary's heal, plus
+ *  the authoring refinement. Math-escape repair covers the PROSE fields
+ *  only — `starterCode` and `tests` are code, where a backslash is content
+ *  (`"\n"` must not be "repaired"). */
+export function parseCodeExerciseInput(input: unknown): CodeExerciseDisplayInput | undefined {
+	const healed = healEncodedArguments(input, codeExerciseDisplayInputSchema);
+	const cleaned = boundaryParse<CodeExerciseDisplayInput>(codeExerciseDisplayInputSchema, healed);
+	if (!cleaned) return undefined;
+	if (codeExerciseInputProblems(cleaned).length > 0) return undefined;
+	return {
+		...cleaned,
+		question: repairMathForDisplay(cleaned.question),
+		explanation: repairMathForDisplay(cleaned.explanation),
+	};
 }
 
 /** probe_done parse — the core-owned schema the tool itself declares. */
