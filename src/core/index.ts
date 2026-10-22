@@ -23,6 +23,7 @@ export * from "./render-settings.ts";
 export * from "./question-core.ts";
 export * from "./literal-newlines.ts";
 export * from "./code-exercise.ts";
+export * from "./answers.ts";
 export * from "./code-exercise-session.ts";
 export * from "./python-runner.ts";
 export * from "./python-runtime.ts";
