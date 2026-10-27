@@ -21,6 +21,7 @@ export * from "./chains.ts";
 export * from "./render-settings.ts";
 
 export * from "./question-core.ts";
+export * from "./literal-newlines.ts";
 export * from "./code-exercise.ts";
 export * from "./python-runner.ts";
 export * from "./python-runtime.ts";
