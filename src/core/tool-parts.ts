@@ -30,6 +30,7 @@
 import { Value } from "typebox/value";
 import type { TSchema } from "typebox";
 import { quizDisplayInputSchema, askInputSchema, askOptionProblems, quizInputProblems, explainInputProblems, explainDisplayInputSchema, type AskToolInput, type QuizToolInput, type ExplainToolInput } from "./question-core.ts";
+import { repairMathForDisplay } from "./math-delims.ts";
 import { healEncodedArguments } from "./argument-heal.ts";
 import { codeExerciseDisplayInputSchema, codeExerciseInputProblems, type CodeExerciseDisplayInput } from "./code-exercise.ts";
 import { probeDoneInputSchema, type ProbeDoneInput } from "./contracts/probe.ts";

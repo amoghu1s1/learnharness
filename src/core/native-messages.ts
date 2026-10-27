@@ -43,6 +43,7 @@ import {
 	THINKING_LABEL,
 } from "./contracts/chat.ts";
 import { compactAnswer, type AnswerData } from "./answers.ts";
+import type { QuestionAnswerData } from "./question-core.ts";
 import { activeCompactionOf, keptIndexFor } from "./compaction.ts";
 
 /** The hard-invariant wording for an aborted turn's unanswered calls —
