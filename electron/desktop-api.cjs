@@ -1,6 +1,6 @@
 "use strict";
 
-const HEADER = "x-learnharness-desktop";
+const HEADER = "x-twig-desktop";
 
 /** Called for EVERY outgoing request, so redirects cannot carry the secret
  * to another origin. Never expose this function or its secret to preload. */

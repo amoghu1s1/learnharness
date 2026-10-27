@@ -76,7 +76,7 @@ async function run(mode) {
 		}), 60000, `Next ${mode} readiness timeout.`);
 		const request = (url, command) => fetch(origin + url, {
 			...(command ? { method: "POST", body: JSON.stringify(command) } : {}),
-			headers: { origin, "sec-fetch-site": "same-origin", "x-learnharness-subscriptions": "1", "content-type": "application/json" },
+			headers: { origin, "sec-fetch-site": "same-origin", "x-twig-subscriptions": "1", "content-type": "application/json" },
 			signal: AbortSignal.timeout(60000),
 		});
 		// Controls have not been imported through an HTTP request yet.
@@ -110,7 +110,7 @@ async function run(mode) {
 		const location = new URL(browser.headers.get("location")); assert.equal(location.origin, "https://auth.openai.com"); assert.equal(new URL(location.searchParams.get("redirect_uri")).hostname, "127.0.0.1");
 		assert.equal((await navigate()).status, 410);
 		assert.equal((await request("/api/subscriptions", { providerId: "chatgpt", op: "cancel" })).status, 200);
-		assert.equal((await fetch(origin + "/api/subscriptions", { method: "POST", headers: { origin: "https://unrelated.invalid", "content-type": "application/json", "x-learnharness-subscriptions": "1" }, body: JSON.stringify({ providerId: "chatgpt", op: "disconnect", id: "offline-account" }) })).status, 403);
+		assert.equal((await fetch(origin + "/api/subscriptions", { method: "POST", headers: { origin: "https://unrelated.invalid", "content-type": "application/json", "x-twig-subscriptions": "1" }, body: JSON.stringify({ providerId: "chatgpt", op: "disconnect", id: "offline-account" }) })).status, 403);
 		assert.equal((await request("/api/subscriptions", { providerId: "chatgpt", op: "disconnect", id: "offline-account" })).status, 200);
 		assert.equal((await (await request("/api/models")).json()).providers.find((provider) => provider.id === "chatgpt").keyPresent, false);
 		console.log(`[smoke-web-subscriptions] ${mode}: cold catalogs, safe status, cross-route SSE/consent/disconnect, opaque redirect/replay, CSRF${mode === "dev" ? ", owner retained across source reload" : ""} passed`);

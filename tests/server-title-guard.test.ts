@@ -102,7 +102,7 @@ async function serverLaunch(platform: string) {
 				return child;
 			},
 		} : mainRequire(id),
-		process: { platform, argv: [], env: { FIXTURE: "kept" }, on() {}, execPath: "/fixture/LearnHarness", resourcesPath: "/fixture/resources with spaces" },
+		process: { platform, argv: [], env: { FIXTURE: "kept" }, on() {}, execPath: "/fixture/Twig", resourcesPath: "/fixture/resources with spaces" },
 		__dirname: path.dirname(mainFile),
 	};
 	runInNewContext(mainSource, context, { filename: mainFile });
@@ -115,7 +115,7 @@ describe("backend-only preload wiring and packaging", () => {
 		it(`${platform} uses the real server launch with the intended argument order`, async () => {
 			const launch = await serverLaunch(platform);
 			const entry = path.join("/fixture/resources with spaces", "server", "standalone", "server.js");
-			assert.equal(launch.binary, "/fixture/LearnHarness");
+			assert.equal(launch.binary, "/fixture/Twig");
 			assert.deepEqual(launch.args, platform === "darwin"
 				? ["--require", path.join("/fixture/resources with spaces", "server-title-guard.cjs"), entry]
 				: [entry]);
