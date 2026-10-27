@@ -38,7 +38,6 @@ copyTree(staticFrom, staticTo);
 if (exists(path.join(ROOT, "public"))) {
 	copyTree(path.join(ROOT, "public"), path.join(STANDALONE, "public"));
 }
-
 // 2) Safety: the repo's real data/ must NEVER ride along in the bundle.
 const leakedData = path.join(STANDALONE, "data");
 if (exists(leakedData)) {
@@ -55,10 +54,19 @@ if (exists(leakedData)) {
 const subscriptionSecrets = fs.readdirSync(STANDALONE).filter((name) => /^(chatgpt|github-copilot|xai)-credentials\.json/.test(name));
 for (const secret of ["auth.json", ...subscriptionSecrets, ".env", ".env.local"]) {
 	if (exists(path.join(STANDALONE, secret))) {
-		console.error(`[build-server] REFUSING: standalone contains ${secret} — dev secrets would ship in the app.`);
+		console.error(`[build-server] REFUSING: standalone contains ${secret} - dev secrets would ship in the app.`);
 		console.error("             Check outputFileTracingExcludes in next.config.ts.");
 		process.exit(1);
 	}
+}
+
+// The code-exercise runtime must ship in the app (no CDN): public/pyodide/ is
+// copied from the pinned npm package at install time (scripts/copy-pyodide.mjs).
+// Checked after the data/secret guards so a leaked secret keeps its own error.
+if (!exists(path.join(STANDALONE, "public", "pyodide", "pyodide.asm.wasm"))) {
+	console.error("[build-server] REFUSING: public/pyodide/ is missing — code exercises could not run in the app.");
+	console.error("             Run `node scripts/copy-pyodide.mjs` (needs the pyodide devDependency installed).");
+	process.exit(1);
 }
 
 // 2c) Payload curation (2026-10-11): the trace sweep can copy repo-root
