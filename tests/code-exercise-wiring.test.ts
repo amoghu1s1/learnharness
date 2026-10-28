@@ -105,17 +105,20 @@ describe("the position folds", () => {
 	});
 
 	it("a tagged code exercise opens teaching (native fold), an untagged one does not", () => {
+		// Upstream 0.3.9 requires the probe_done CALL and its matching
+		// successful result, not a bare result line (the hardened handoff).
+		const probeCall = callMessage("pd1", "probe_done", {});
 		const probeDone = {
 			id: "pd",
 			role: "toolResult",
-			toolCallId: "pd1",
+			toolCallId: "call_pd1",
 			toolName: "probe_done",
 			content: [{ type: "text", text: "ok" }],
 			isError: false,
 			timestamp: Date.now(),
 		} as never as LhMessage;
-		assert.equal(phaseAt3Lh([probeDone, callMessage("c", CODE_EXERCISE_TOOL, { nodeId: "a" })]), "teach");
-		assert.equal(phaseAt3Lh([probeDone, callMessage("c", CODE_EXERCISE_TOOL, {})]), "plan");
+		assert.equal(phaseAt3Lh([probeCall, probeDone, callMessage("c", CODE_EXERCISE_TOOL, { nodeId: "a" })]), "teach");
+		assert.equal(phaseAt3Lh([probeCall, probeDone, callMessage("c", CODE_EXERCISE_TOOL, {})]), "plan");
 	});
 
 	it("it positions the map (both derive folds agree)", () => {

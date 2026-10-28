@@ -37,12 +37,20 @@ describe("AuthStore adapter", () => {
 		assert.equal(authStore.authVars().OPENROUTER_API_KEY, "sk-or-v1-abc");
 	});
 
-	it("the file is mode 0600 (secrets), also after rewrites", () => {
+	it("the file is mode 0600 (secrets), also after rewrites", (t) => {
 		authStore.setAuthVar("DEEPGRAM_API_KEY", "d".repeat(40));
-		const first = fs.statSync(AUTH_FILE).mode & 0o777;
-		assert.equal(first, 0o600);
-		authStore.setAuthVar("DEEPGRAM_API_KEY", "e".repeat(40));
-		assert.equal(fs.statSync(AUTH_FILE).mode & 0o777, 0o600, "rewrite keeps 0600");
+		assert.ok(fs.existsSync(AUTH_FILE), "the auth file exists");
+		// Windows has no POSIX mode bits; the owner-only guarantee there is
+		// the per-user data directory ACL, not st_mode. Keep the round-trip
+		// check below and assert the POSIX contract on POSIX only.
+		if (process.platform === "win32") {
+			t.diagnostic("POSIX mode assertion skipped on Windows");
+		} else {
+			const first = fs.statSync(AUTH_FILE).mode & 0o777;
+			assert.equal(first, 0o600);
+			authStore.setAuthVar("DEEPGRAM_API_KEY", "e".repeat(40));
+			assert.equal(fs.statSync(AUTH_FILE).mode & 0o777, 0o600, "rewrite keeps 0600");
+		}
 	});
 
 	it("set preserves unknown vars verbatim (forward-compat)", () => {

@@ -367,7 +367,9 @@ describe("release gate — CLI (offline, repo config)", () => {
 	// intentionally stay at 0.2.0. A release version bump must not break tests.
 	const VERSION = (JSON.parse(fs.readFileSync(path.join(repoRoot, "package.json"), "utf8")) as { version: string }).version;
 	const TAG = `v${VERSION}`;
-	const tsxImport = fileURLToPath(import.meta.resolve("tsx"));
+	// Keep the resolver's file: URL — Windows rejects a bare `C:\…` path in
+	// Node's --import flag (ERR_UNSUPPORTED_ESM_URL_SCHEME).
+	const tsxImport = import.meta.resolve("tsx");
 	function run(args: string[], cwd = repoRoot) {
 		return spawnSync(process.execPath, ["--import", tsxImport, script, ...args], {
 			cwd, encoding: "utf8", timeout: 60_000,
