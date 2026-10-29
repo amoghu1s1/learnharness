@@ -4,7 +4,7 @@ System prompts are composed at agent construction (src/agent/teacher-agent.ts), 
 
 1. `src/agent/system-prompt.md` — the SHARED base: the agent intro, the voice, the philosophy (why the system exists), and the accuracy rule. The teaching method (Principle i / Principle ii, the click, the arc, the hedge) lives in `teacher/05-method.md` — teacher-only since the prober never teaches.
 2. Every numeric-prefix `*.md` fragment in the agent's directory (`prober/` or `teacher/`), in **sorted filename order**, joined with `---` separators. The agent's own job and method LEAD the composition (the 2026-09-27 reorder). The loader enforces the numeric prefix (`\d*-*.md`) — other files (like this README) never enter the model's prompt.
-3. The `shared/` fragments, as a trailing appendix (voice, prose, accuracy, tool/file/format mechanics).
+3. The `shared/` fragments, as a trailing appendix (tool/file/format mechanics).
 
 Rules for adding a fragment:
 
@@ -12,12 +12,8 @@ Rules for adding a fragment:
 - `shared/` fragments compose into BOTH agents (after the base and their own
   fragments — a trailing appendix): cross-agent doctrine only, phase-neutral by
   construction: `20-question-tools.md` (tool MECHANICS only; what to ask is each
-  phase's own doctrine), `30-learner-files.md`, `40-formatting.md`. The voice
-  (`10-voice.md`), the prose spec (`12-prose.md`), accuracy (`15-accuracy.md`), the
-  thinking-field doctrine (`16-mental-model.md`) and confidence (`25-confidence.md`)
-  are shared too. Practice composes a curated allowlist — `PRACTICE_SHARED_FRAGMENTS`
-  in `src/agent/prompt-segments.ts` — so a new shared fragment does not reach
-  practice unless it is added there. The "never reference the other
+  phase's own doctrine), `30-learner-files.md`, `40-formatting.md`. The voice lives
+  in the base (moved out of shared/ 2026-09-27). The "never reference the other
   agent's tools" rule below still applies, so shared fragments may only cover tools
   both agents actually hold.
 - One fragment per workstream — your brief tells you which filename you own.
