@@ -12,7 +12,8 @@
   <a href="https://github.com/amoghu1s1/twig/releases">Download</a> ·
   <a href="#how-it-works">How it works</a> ·
   <a href="docs/development.md">Documentation</a> ·
-  <a href="https://github.com/amoghu1s1/twig/issues">Issues</a>
+  <a href="https://github.com/amoghu1s1/twig/issues">Issues</a> ·
+  <a href="https://discord.gg/5tCHHQEB2e">Discord</a>
 </p>
 
 > Twig is a fork of [LearnHarness](https://github.com/amosblomqvist/learnharness), renamed and packaged separately so both can run side by side. Original work © Amos Blomqvist, AGPL-3.0.
